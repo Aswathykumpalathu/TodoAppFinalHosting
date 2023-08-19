@@ -42,16 +42,29 @@ router.post('/todos', async (req, res) => {
     }
   });
 
-router.delete('/todos/:id', getTodo, async (req, res) => {
-    console.log('todo deleted')
+// router.delete('/todos/:id', getTodo, async (req, res) => {
+//     console.log('todo deleted')
+//     try {
+//       await res.todo.remove();
+//       res.json({ message: 'Deleted Todo' });
+//     } catch (err) {
+//       res.status(500).json({ message: err.message });
+//     }
+//   });
+router.delete('/todos/:id', async (req, res) => {
+    console.log('new delete')
     try {
-      await res.todo.remove();
-      res.json({ message: 'Deleted Todo' });
+      const todo = await Todo.findByIdAndDelete(req.params.id);
+      if (todo) {
+        res.json({ message: 'Deleted Todo' });
+      } else {
+        res.status(404).json({ message: 'Todo not found' });
+      }
     } catch (err) {
+      console.error(err);
       res.status(500).json({ message: err.message });
     }
   });
-
   async function getTodo(req, res, next) {
     let todo;
   
